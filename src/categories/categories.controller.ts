@@ -6,7 +6,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RoleGuard } from 'src/common/guards/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/config/uploadFile';
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/categories')
