@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Coupon } from './entities/coupon.entity';
 import { Repository } from 'typeorm';
-import { Response, Request } from 'express';
+import { Request } from 'express';
 import { pagination } from 'src/helpers/pagination';
 
 @Injectable()
@@ -13,13 +13,13 @@ export class CouponsService {
     @InjectRepository(Coupon)
     private readonly couponRepository: Repository<Coupon>
   ){}
-  async create(data: CreateCouponDto, res:Response) {
+  async create(data: CreateCouponDto) {
     const coupon = this.couponRepository.create(data);
     await this.couponRepository.save(coupon);
-    return res.status(201).json({status:"success",message:"coupon created successfully"});
+    return {status:"success",message:"coupon created successfully"};
   }
 
-  async findAll(req:Request,res:Response) {
+  async findAll(req:Request) {
     const limit = +(req.query.limit || 10);
     const page = +(req.query.page || 1);
     const skip = (page - 1) * limit;
@@ -31,38 +31,38 @@ export class CouponsService {
       }
     );
     const pagin = pagination(limit,page,count);
-    return res.status(200).json({status:"success",data:{coupons,pagination:pagin}});
+    return {status:"success",data:{coupons,pagination:pagin}};
   }
 
-  async findOne(id: string, res:Response) {
+  async findOne(id: string) {
     const coupon = await this.couponRepository.findOne({
       where:{id},
     });
     if(!coupon){
-      return res.status(404).json({status:"not found",message:"coupon not found"});
+      throw new NotFoundException({status:"error",message:"coupon not found"});
     }
-    return res.status(200).json({status:"success",data:coupon});
+    return {status:"success",data:coupon};
   }
 
-  async update(id: string, data: UpdateCouponDto, res:Response) {
+  async update(id: string, data: UpdateCouponDto) {
     const coupon = await this.couponRepository.findOne({
       where:{id},
     });
     if(!coupon){
-      return res.status(404).json({status:"not found",message:"coupon not found"});
+      throw new NotFoundException({status:"error",message:"coupon not found"});
     }
     await this.couponRepository.update(id,data);
-    return res.status(200).json({status:"success",message:"coupon updated successfully"});
+    return {status:"success",message:"coupon updated successfully"};
   }
 
-  async remove(id: string, res:Response) {
+  async remove(id: string) {
     const coupon = await this.couponRepository.findOne({
       where:{id},
     });
     if(!coupon){
-      return res.status(404).json({status:"not found",message:"coupon not found"});
+      throw new NotFoundException({status:"error",message:"coupon not found"});
     }
     await this.couponRepository.delete(id)
-    return res.status(200).json({status:"success",message:"coupon deleted successfully"});
+    return {status:"success",message:"coupon deleted successfully"};
   }
 }

@@ -6,6 +6,7 @@ A comprehensive RESTful API built with NestJS for managing an e-commerce platfor
 
 - **Authentication & Authorization**
   - User registration and login with JWT
+  - Google OAuth 2.0 authentication with Passport.js
   - Role-based access control (Admin/User)
   - Password reset functionality
   - Profile image upload
@@ -62,7 +63,7 @@ A comprehensive RESTful API built with NestJS for managing an e-commerce platfor
 - **Framework**: [NestJS](https://nestjs.com/) v11
 - **Language**: TypeScript
 - **Database**: MySQL with TypeORM
-- **Authentication**: JWT (JSON Web Tokens)
+- **Authentication**: JWT (JSON Web Tokens) + Passport.js (Google OAuth 2.0)
 - **Caching**: Redis
 - **File Upload**: Multer + Cloudinary
 - **Email**: Nodemailer
@@ -102,6 +103,8 @@ Before running this project, make sure you have the following installed:
    ```env
    # Server
    PORT=3000
+   BACKEND_URL=http://localhost:3000
+   FRONTEND_URL=http://localhost:5173
 
    # Database
    DB_HOST=your_db_host
@@ -112,6 +115,10 @@ Before running this project, make sure you have the following installed:
 
    # JWT
    JWT_SECRET=your_jwt_secret_key
+
+   # Google OAuth
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
 
    # Cloudinary
    CLOUDINARY_NAME=your_cloud_name
@@ -127,7 +134,29 @@ Before running this project, make sure you have the following installed:
    PASS=your_email_password
    ```
 
-4. **Database Setup**
+4. **Google OAuth Setup**
+
+   To enable Google OAuth authentication:
+
+   a. Go to [Google Cloud Console](https://console.cloud.google.com/)
+
+   b. Create a new project or select an existing one
+
+   c. Enable the Google+ API:
+   - Navigate to "APIs & Services" > "Library"
+   - Search for "Google+ API" and enable it
+
+   d. Create OAuth 2.0 credentials:
+   - Go to "APIs & Services" > "Credentials"
+   - Click "Create Credentials" > "OAuth client ID"
+   - Select "Web application"
+   - Add authorized redirect URIs:
+     - `http://localhost:3000/api/v1/auth/google/callback` (development)
+     - Your production callback URL (when deploying)
+
+   e. Copy the Client ID and Client Secret to your `.env` file
+
+5. **Database Setup**
 
    Run migrations to set up the database schema:
 
@@ -168,10 +197,12 @@ http://localhost:3000/api/v1
 
 ### Authentication Endpoints
 
-| Method | Endpoint         | Description       | Auth Required |
-| ------ | ---------------- | ----------------- | ------------- |
-| POST   | `/auth/register` | Register new user | No            |
-| POST   | `/auth/login`    | User login        | No            |
+| Method | Endpoint                | Description                    | Auth Required |
+| ------ | ----------------------- | ------------------------------ | ------------- |
+| POST   | `/auth/register`        | Register new user              | No            |
+| POST   | `/auth/login`           | User login                     | No            |
+| GET    | `/auth/google`          | Initiate Google OAuth login    | No            |
+| GET    | `/auth/google/callback` | Google OAuth callback redirect | No            |
 
 ### User Endpoints
 
@@ -285,7 +316,30 @@ npm run revert
 - **Whitelist**: Strips unknown properties from requests
 - **Global Exception Filter**: Centralized error handling
 
-## 📁 Project Structure
+## � Google OAuth Authentication Flow
+
+The application implements Google OAuth 2.0 authentication using Passport.js:
+
+1. **Initiate Login**: User clicks "Login with Google" which redirects to `/api/v1/auth/google`
+2. **Google Authorization**: User is redirected to Google's consent screen
+3. **Callback**: After authorization, Google redirects back to `/api/v1/auth/google/callback`
+4. **User Creation/Login**:
+   - If the user doesn't exist, a new account is created with:
+     - Email from Google profile
+     - Full name from Google profile
+     - Profile picture from Google account
+     - Default password (user can reset later)
+   - If the user exists, they are logged in
+5. **JWT Token**: A JWT token is generated and sent to the frontend
+6. **Redirect**: User is redirected to the frontend with the token as a query parameter
+
+**Implementation Details**:
+
+- Strategy: `GoogleStrategy` in `src/common/strategy/google.strategy.ts`
+- Guard: `GoogleAuthGuard` in `src/common/guards/google.guard.ts`
+- Service: `googleLogin()` method in `src/auth/auth.service.ts`
+
+## �📁 Project Structure
 
 ```
 src/

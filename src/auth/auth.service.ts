@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { EmailSenderService } from 'src/email-sender/email-sender.service';
 import { afterRegister } from 'src/helpers/messages';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -40,5 +41,28 @@ export class AuthService {
         await this.userRepository.save(newUser);
         await this.emailSenderService.sendEmail(newUser.email,"Welcome to our store",afterRegister(newUser.fullname));
         return {status:"success",message:"user created successfully"};
+    }
+
+    async googleLogin(req:Request,res:Response){
+        const loginData = req.user as {email:string,firstName:string,lastName:string,picture:string,accessToken:string};
+        if(!loginData){
+            throw new BadRequestException({status:"bad request",message:"user not found"})
+        }
+        let user = await this.userRepository.findOneBy({email:loginData.email});
+        if(!user){
+            const hashedPassword = await bcrypt.hash("123456789",10);
+            user = this.userRepository.create({
+                fullname: `${loginData.firstName} ${loginData.lastName}`,
+                email: loginData.email,
+                role: "user",
+                profileImage: loginData.picture,
+                password: hashedPassword
+            });
+            await this.userRepository.save(user);
+            await this.emailSenderService.sendEmail(user.email,"Welcome to our store",afterRegister(user.fullname));
+        }
+        const payload = {id:user.id,email:user.email,role:user.role};
+        const token = this.jwtService.sign(payload,{expiresIn:"1d"});
+        return res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}`);
     }
 }

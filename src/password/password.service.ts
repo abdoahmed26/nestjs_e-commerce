@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import * as bcrypt from 'bcrypt';
 import { EmailSenderService } from 'src/email-sender/email-sender.service';
 import { afterForgetPass } from 'src/helpers/messages';
@@ -43,7 +43,7 @@ export class PasswordService {
       throw new NotFoundException({status:"error",message: "User not found"})
     }
     const token = this.jwtService.sign({id: user.id},{expiresIn : "5m"});
-    const url = `http://localhost:3000/reset-password/${token}`;
+    const url = `${process.env.FRONTEND_URL}/reset-password/${token}`;
     await this.emailService.sendEmail(user.email, "Reset Password", afterForgetPass(user.fullname,url));
     return {status:"success",message: 'Password reset link sent successfully'}
   }
