@@ -50,6 +50,15 @@ A comprehensive RESTful API built with NestJS for managing an e-commerce platfor
   - Coupon validation
   - Apply coupons to orders
 
+- **Payment Integration**
+  - Stripe payment processing
+  - Online card payments
+  - Cash on delivery support
+  - Payment confirmation via direct API
+  - Refund functionality (admin only)
+  - Payment status tracking
+  - Email notifications for payments
+
 - **Email Notifications**
   - Email service integration with Nodemailer
   - Transactional emails
@@ -64,6 +73,7 @@ A comprehensive RESTful API built with NestJS for managing an e-commerce platfor
 - **Language**: TypeScript
 - **Database**: MySQL with TypeORM
 - **Authentication**: JWT (JSON Web Tokens) + Passport.js (Google OAuth 2.0)
+- **Payment**: Stripe
 - **Caching**: Redis
 - **File Upload**: Multer + Cloudinary
 - **Email**: Nodemailer
@@ -80,6 +90,7 @@ Before running this project, make sure you have the following installed:
 - MySQL database
 - Redis server
 - Cloudinary account (for image uploads)
+- Stripe account (for payment processing)
 
 ## 🔧 Installation
 
@@ -128,6 +139,11 @@ Before running this project, make sure you have the following installed:
 
    # Redis
    REDIS_URL=your_redis_url
+
+   # Stripe Payment
+   STRIPE_SECRET_KEY=sk_test_your_secret_key
+   STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
+   STRIPE_CURRENCY=usd
 
    # Email (Nodemailer)
    EMAIL=your_email@gmail.com
@@ -277,6 +293,15 @@ http://localhost:3000/api/v1
 | PATCH  | `/coupons/:id` | Update coupon   | Yes (Admin)   |
 | DELETE | `/coupons/:id` | Delete coupon   | Yes (Admin)   |
 
+### Payment Endpoints
+
+| Method | Endpoint                    | Description           | Auth Required |
+| ------ | --------------------------- | --------------------- | ------------- |
+| POST   | `/payments/create-intent`   | Create payment intent | Yes           |
+| POST   | `/payments/confirm`         | Confirm payment       | Yes           |
+| GET    | `/payments/status/:orderId` | Get payment status    | Yes           |
+| POST   | `/payments/refund/:orderId` | Refund payment        | Yes (Admin)   |
+
 ## 🧪 Testing
 
 ```bash
@@ -339,7 +364,63 @@ The application implements Google OAuth 2.0 authentication using Passport.js:
 - Guard: `GoogleAuthGuard` in `src/common/guards/google.guard.ts`
 - Service: `googleLogin()` method in `src/auth/auth.service.ts`
 
-## �📁 Project Structure
+## 💳 Stripe Payment Integration
+
+The application includes a complete payment processing system using Stripe:
+
+### Payment Flow
+
+1. **Create Order**: User creates an order with `paymentMethod: 'card'`
+2. **Create Payment Intent**: Frontend calls `/api/v1/payments/create-intent`
+   - Backend creates a Stripe Payment Intent
+   - Returns `clientSecret` to frontend
+3. **User Payment**: User enters card details on frontend (Stripe Elements)
+4. **Confirm Payment**: Frontend calls `/api/v1/payments/confirm`
+   - Backend verifies payment status with Stripe
+   - Updates order status to 'paid'
+   - Sends confirmation email
+
+### Features
+
+- ✅ **Online Card Payments**: Secure payment processing via Stripe
+- ✅ **Cash on Delivery**: Traditional payment option
+- ✅ **Direct API Confirmation**: No webhooks required
+- ✅ **Refund System**: Admin can process full or partial refunds
+- ✅ **Payment Tracking**: Complete transaction history
+- ✅ **Email Notifications**: Payment success and refund emails
+
+### Testing
+
+Use Stripe test cards:
+
+| Card Number         | Result                |
+| ------------------- | --------------------- |
+| 4242 4242 4242 4242 | ✅ Success            |
+| 4000 0000 0000 9995 | ❌ Insufficient funds |
+| 4000 0000 0000 0002 | ❌ Card declined      |
+
+**Expiry**: Any future date (e.g., 12/34)  
+**CVC**: Any 3 digits (e.g., 123)  
+**ZIP**: Any 5 digits (e.g., 12345)
+
+### Setup
+
+1. Get your Stripe API keys from [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys)
+2. Add to `.env`:
+   ```env
+   STRIPE_SECRET_KEY=sk_test_your_key
+   STRIPE_PUBLISHABLE_KEY=pk_test_your_key
+   STRIPE_CURRENCY=usd
+   ```
+3. Run migrations to create payment tables
+
+**Implementation Details**:
+
+- Service: `PaymentsService` in `src/payments/payments.service.ts`
+- Controller: `PaymentsController` in `src/payments/payments.controller.ts`
+- Entity: `Payment` in `src/payments/entities/payment.entity.ts`
+
+## 📁 Project Structure
 
 ```
 src/
@@ -354,6 +435,7 @@ src/
 ├── migrations/           # Database migrations
 ├── orders/               # Order management
 ├── password/             # Password reset functionality
+├── payments/             # Payment processing (Stripe)
 ├── products/             # Product management
 ├── redis/                # Redis cache module
 ├── reviews/              # Review system
