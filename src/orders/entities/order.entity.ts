@@ -10,6 +10,15 @@ export enum OrderStatus {
     DELIVERED = 'delivered',
     CANCELED = 'canceled',
 }
+
+export enum PaymentStatus {
+    PENDING = 'pending',
+    PROCESSING = 'processing',
+    SUCCEEDED = 'succeeded',
+    FAILED = 'failed',
+    REFUNDED = 'refunded',
+}
+
 @Entity("orders")
 export class Order {
     @PrimaryGeneratedColumn("uuid")
@@ -29,6 +38,15 @@ export class Order {
 
     @Column({ default: 'cash_on_delivery' })
     paymentMethod: string;
+
+    @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
+    paymentStatus: PaymentStatus;
+
+    @Column({ nullable: true })
+    paymentIntentId?: string;
+
+    @Column({ nullable: true })
+    transactionId?: string;
 
     @CreateDateColumn({type:"timestamp"})
     createdAt: Date;

@@ -16,6 +16,7 @@ import { CouponsModule } from './coupons/coupons.module';
 import { RedisModule } from './redis/redis.module';
 import { EmailSenderModule } from './email-sender/email-sender.module';
 import { PasswordModule } from './password/password.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { PasswordModule } from './password/password.module';
     CouponsModule,
     RedisModule,
     EmailSenderModule,
-    PasswordModule
+    PasswordModule,
+    PaymentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

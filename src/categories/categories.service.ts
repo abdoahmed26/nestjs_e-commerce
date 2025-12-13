@@ -6,12 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
 import { pagination } from 'src/helpers/pagination';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>
+    private readonly categoryRepository: Repository<Category>,
+    private redisService: RedisService,
   ){}
   async create(data: CreateCategoryDto,image:string | undefined) {
     const newCategory = this.categoryRepository.create({...data,image})
@@ -23,11 +25,17 @@ export class CategoriesService {
     const limit = +(req.query.limit || 10);
     const page = +(req.query.page || 1);
     const skip = (page - 1) * limit;
+    const key = `categories${limit}${page}`
+    const data = await this.redisService.get(key);
+    if(data){
+      return {status:"success",path:"cache",data};
+    }
     const [categories,count] = await this.categoryRepository.findAndCount({
       skip,
       take: limit,
     })
     const pagin = pagination(limit,page,count);
+    await this.redisService.set(key,{categories,pagination:pagin},5*60);
     return {status:"success",data:{categories,pagination:pagin}};
   }
 
