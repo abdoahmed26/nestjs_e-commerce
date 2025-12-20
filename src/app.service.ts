@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Response } from 'express';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AppService {
-  getHello(res: Response) {
-    return res.status(200).json({ message: 'Hello World!' });
+  constructor(private readonly i18n: I18nService) {}
+
+  getHello() {
+    return `${this.i18n.t('test.HELLO')} ${this.i18n.t('test.ABDO')}`;
   }
 }
