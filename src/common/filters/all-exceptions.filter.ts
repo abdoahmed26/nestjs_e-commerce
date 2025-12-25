@@ -24,12 +24,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
             status = exception.getStatus();
             message = exception.getResponse() as string;
         }
-
-        response.status(status).json({
-            statusCode: status,
-            timestamp: new Date().toISOString(),
-            path: request.url,
-            error: message,
-        });
+        if(process.env.NODE_ENV === 'development'){
+            response.status(status).json({
+                statusCode: status,
+                timestamp: new Date().toISOString(),
+                path: request.url,
+                error: message,
+            });
+        }else{
+            response.status(status).json({
+                statusCode: status,
+                timestamp: new Date().toISOString(),
+                error: message,
+            });
+        }
     }
 }
