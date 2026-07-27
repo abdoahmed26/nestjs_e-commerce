@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } fro
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 import type { Request } from 'express';
 
 @UseGuards(AuthGuard)

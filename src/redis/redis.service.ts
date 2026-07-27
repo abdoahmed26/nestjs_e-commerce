@@ -6,15 +6,29 @@ import { createClient, RedisClientType } from 'redis';
 export class RedisService implements OnModuleInit {
     private client: RedisClientType;
 
-    onModuleInit() {
+    async onModuleInit() {
         this.client = createClient({
             url: process.env.REDIS_URL,
+            socket: {
+                connectTimeout: 10_000,
+                reconnectStrategy: (retries: number) => {
+                    if (retries >= 3) {
+                        return new Error('Redis reconnect attempts exceeded');
+                    }
+
+                    return Math.min(retries * 500, 3_000);
+                },
+            },
         }) as RedisClientType;
     
-        this.client.on('error', (err) => console.log('Redis Error: ' + err));
+        this.client.on('error', (err: Error) => console.log('Redis Error: ' + err));
         this.client.on('connect', () => console.log('Redis Connected ✔'));
     
-        this.client.connect();
+        try {
+            await this.client.connect();
+        } catch (error) {
+            console.error('Failed to connect to Redis:', error);
+        }
     }
 
     async get(key: string) {

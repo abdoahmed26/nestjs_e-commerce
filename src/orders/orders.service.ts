@@ -6,13 +6,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order, OrderStatus } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
-import { Coupon } from 'src/coupons/entities/coupon.entity';
+import { Coupon } from '../coupons/entities/coupon.entity';
 import { Request } from 'express';
-import { Cart } from 'src/carts/entities/cart.entity';
-import { Product } from 'src/products/entities/product.entity';
-import { pagination } from 'src/helpers/pagination';
-import { EmailSenderService } from 'src/email-sender/email-sender.service';
-import { afterOrder } from 'src/helpers/messages';
+import { Cart } from '../carts/entities/cart.entity';
+import { Product } from '../products/entities/product.entity';
+import { pagination } from '../helpers/pagination';
+import { EmailSenderService } from '../email-sender/email-sender.service';
+import { afterOrder } from '../helpers/messages';
 
 @Injectable()
 export class OrdersService {

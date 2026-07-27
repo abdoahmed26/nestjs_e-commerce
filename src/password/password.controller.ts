@@ -3,7 +3,7 @@ import { PasswordService } from './password.service';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ForgetPasswordDto, ResetPasswordDto } from './dto/reset-password.dto';
 import type { Request } from 'express';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 @Controller('api/v1/password')
 export class PasswordController {

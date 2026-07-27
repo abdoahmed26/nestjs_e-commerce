@@ -1,9 +1,9 @@
 import { BadRequestException, Body, Controller, Get, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, LoginDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto, LoginDto } from '../users/dto/create-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/config/uploadFile';
-import { GoogleAuthGuard } from 'src/common/guards/google.guard';
+import { multerOptions } from '../config/uploadFile';
+import { GoogleAuthGuard } from '../common/guards/google.guard';
 import type { Request, Response } from 'express';
 
 @Controller('api/v1/auth')

@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { PasswordService } from './password.service';
 import { PasswordController } from './password.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { EmailSenderModule } from 'src/email-sender/email-sender.module';
+import { User } from '../users/entities/user.entity';
+import { EmailSenderModule } from '../email-sender/email-sender.module';
 
 @Module({
   imports:[TypeOrmModule.forFeature([User]), EmailSenderModule],

@@ -2,10 +2,10 @@
 import { Controller, Get, Body, Patch, Param, Delete, UseGuards, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 import type { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/config/uploadFile';
+import { multerOptions } from '../config/uploadFile';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/users')

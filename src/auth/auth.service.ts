@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, LoginDto } from 'src/users/dto/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
+import { CreateUserDto, LoginDto } from '../users/dto/create-user.dto';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { EmailSenderService } from 'src/email-sender/email-sender.service';
-import { afterRegister } from 'src/helpers/messages';
+import { EmailSenderService } from '../email-sender/email-sender.service';
+import { afterRegister } from '../helpers/messages';
 import { Request, Response } from 'express';
 
 @Injectable()

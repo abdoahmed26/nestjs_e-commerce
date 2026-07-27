@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } fro
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { RoleGuard } from 'src/common/guards/role.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
+import { RoleGuard } from '../common/guards/role.guard';
 import type { Request } from 'express';
 
 @UseGuards(AuthGuard)

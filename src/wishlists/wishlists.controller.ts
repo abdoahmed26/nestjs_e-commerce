@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { WishlistsService } from './wishlists.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 import type { Request } from 'express';
 
 @UseGuards(AuthGuard)

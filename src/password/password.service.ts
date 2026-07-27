@@ -3,13 +3,13 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ForgetPasswordDto, ResetPasswordDto } from './dto/reset-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import * as bcrypt from 'bcrypt';
-import { EmailSenderService } from 'src/email-sender/email-sender.service';
-import { afterForgetPass } from 'src/helpers/messages';
+import { EmailSenderService } from '../email-sender/email-sender.service';
+import { afterForgetPass } from '../helpers/messages';
 
 @Injectable()
 export class PasswordService {

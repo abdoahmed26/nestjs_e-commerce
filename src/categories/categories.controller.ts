@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterc
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { RoleGuard } from 'src/common/guards/role.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
+import { RoleGuard } from '../common/guards/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/config/uploadFile';
+import { multerOptions } from '../config/uploadFile';
 import type { Request } from 'express';
 
 @UseGuards(AuthGuard)

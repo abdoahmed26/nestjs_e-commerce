@@ -4,10 +4,10 @@ import { OrdersController } from './orders.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/orderItem.entity';
-import { Coupon } from 'src/coupons/entities/coupon.entity';
-import { Cart } from 'src/carts/entities/cart.entity';
-import { Product } from 'src/products/entities/product.entity';
-import { EmailSenderModule } from 'src/email-sender/email-sender.module';
+import { Coupon } from '../coupons/entities/coupon.entity';
+import { Cart } from '../carts/entities/cart.entity';
+import { Product } from '../products/entities/product.entity';
+import { EmailSenderModule } from '../email-sender/email-sender.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem, Coupon, Cart, Product]), EmailSenderModule],

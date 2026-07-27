@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Coupon } from './entities/coupon.entity';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
-import { pagination } from 'src/helpers/pagination';
+import { pagination } from '../helpers/pagination';
 
 @Injectable()
 export class CouponsService {

@@ -5,8 +5,8 @@ import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
-import { pagination } from 'src/helpers/pagination';
-import { RedisService } from 'src/redis/redis.service';
+import { pagination } from '../helpers/pagination';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class CategoriesService {

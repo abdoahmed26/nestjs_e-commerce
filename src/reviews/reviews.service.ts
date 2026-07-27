@@ -5,9 +5,9 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './entities/review.entity';
 import { Repository } from 'typeorm';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../products/entities/product.entity';
 import { Request } from 'express';
-import { pagination } from 'src/helpers/pagination';
+import { pagination } from '../helpers/pagination';
 
 @Injectable()
 export class ReviewsService {

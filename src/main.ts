@@ -26,8 +26,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  const dataSource = app.get(DataSource);
   try {
+    const dataSource = app.get(DataSource);
     await dataSource.query('SELECT 1');
     console.log('✅ Database connected successfully!');
   } catch (err) {
@@ -37,4 +37,4 @@ async function bootstrap() {
     console.log(`Server started on port http://localhost:${process.env.PORT}`);
   });
 }
-bootstrap();
+void bootstrap();

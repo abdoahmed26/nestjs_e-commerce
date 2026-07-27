@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { Request, Response } from 'express';
-import { pagination } from 'src/helpers/pagination';
+import { pagination } from '../helpers/pagination';
 
 @Injectable()
 export class UsersService {

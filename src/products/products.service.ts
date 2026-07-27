@@ -5,9 +5,9 @@ import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
-import { pagination } from 'src/helpers/pagination';
-import { Category } from 'src/categories/entities/category.entity';
-import { RedisService } from 'src/redis/redis.service';
+import { pagination } from '../helpers/pagination';
+import { Category } from '../categories/entities/category.entity';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class ProductsService {

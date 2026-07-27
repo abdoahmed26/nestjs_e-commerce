@@ -4,7 +4,7 @@ import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wishlist } from './entities/wishlist.entity';
 import { Repository } from 'typeorm';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../products/entities/product.entity';
 import { Request } from 'express';
 
 @Injectable()
